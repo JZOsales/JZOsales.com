@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SeiZoMart</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Welcome to SeiZo Mart!</h1>
+        <p>Buy Roblox Accounts Safely</p>
+    </header>
+
+    <div class="search-bar">
+        <input type="text" id="searchInput" placeholder="Search accounts...">
+      </div>
+
+      <div class="controls">
+        <select id="sortSelect">
+          <option value="">Sort by Price</option>
+          <option value="asc">Price: Low to High</option>
+          <option value="desc">Price: High to Low</option>
+        </select>
+      
+        <select id="searchHistory">
+          <option value="">Search History</option>
+        </select>
+      </div>
+
+  <section class="account-list">
+    <div class="account-card">
+      <img src="https://via.placeholder.com/200x200.png?text=Roblox+Acc+1" alt="Roblox Account 1">
+      <h2>OG Username Account</h2>
+      <p>Followers: 2,300+<br>Items: Rare Hats</p>
+      <span class="price">$25.00</span>
+      <button>Buy Now</button>
+    </div>
+
+    <div class="account-card">
+      <img src="https://via.placeholder.com/200x200.png?text=Roblox+Acc+2" alt="Roblox Account 2">
+      <h2>2016 Veteran Account</h2>
+      <p>Followers: 5,000+<br>Items: Limited Faces<br>RIG: Bloxfruit </p>
+      <span class="price">$40.00</span>
+      <button>Buy Now</button>
+    </div>
+
+    <div class="account-card">
+      <img src="https://via.placeholder.com/200x200.png?text=Roblox+Acc+3" alt="Roblox Account 3">
+      <h2>Rich Avatar Bundle</h2>
+      <p>Robux: 1,200+</p>
+      <span class="price">$35.00</span>
+      <button>Buy Now</button>
+    </div>
+    
+  </section>
+
+  <footer>
+    <p>&copy; 2025 SeiZo Mart. All rights reserved.</p>
+  </footer>
+  <script>
+    const searchInput = document.getElementById("searchInput");
+  
+    searchInput.addEventListener("input", function () {
+      const query = this.value.toLowerCase();
+      const cards = document.querySelectorAll(".account-card");
+  
+      cards.forEach(card => {
+        const text = card.innerText.toLowerCase();
+        if (text.includes(query)) {
+          card.style.display = "block";
+        } else {
+          card.style.display = "none";
+        }
+      });
+    });
+    
+  </script>
+
+<script>
+    const searchInput = document.getElementById("searchInput");
+    const sortSelect = document.getElementById("sortSelect");
+    const searchHistory = document.getElementById("searchHistory");
+  
+    const cardsContainer = document.querySelector(".account-list");
+  
+    // --- SEARCH FUNCTION ---
+    searchInput.addEventListener("input", function () {
+      const query = this.value.toLowerCase();
+      const cards = document.querySelectorAll(".account-card");
+  
+      // Save to history
+      if (query && !searchHistoryOptions().includes(query)) {
+        addSearchToHistory(query);
+      }
+  
+      cards.forEach(card => {
+        const text = card.innerText.toLowerCase();
+        card.style.display = text.includes(query) ? "block" : "none";
+      });
+    });
+  
+    // --- SORTING FUNCTION ---
+    sortSelect.addEventListener("change", function () {
+      const cards = Array.from(document.querySelectorAll(".account-card"));
+  
+      cards.sort((a, b) => {
+        const priceA = parseFloat(a.querySelector(".price").innerText.replace("$", ""));
+        const priceB = parseFloat(b.querySelector(".price").innerText.replace("$", ""));
+  
+        return this.value === "asc" ? priceA - priceB : priceB - priceA;
+      });
+  
+      cards.forEach(card => cardsContainer.appendChild(card));
+    });
+  
+    // --- SEARCH HISTORY ---
+    function addSearchToHistory(query) {
+      let history = JSON.parse(localStorage.getItem("searchHistory")) || [];
+      history.unshift(query);
+      history = [...new Set(history)].slice(0, 5); // Max 5 items
+      localStorage.setItem("searchHistory", JSON.stringify(history));
+      loadSearchHistory();
+    }
+  
+    function loadSearchHistory() {
+      const history = JSON.parse(localStorage.getItem("searchHistory")) || [];
+      searchHistory.innerHTML = `<option value="">Search History</option>`;
+      history.forEach(item => {
+        const option = document.createElement("option");
+        option.value = item;
+        option.textContent = item;
+        searchHistory.appendChild(option);
+      });
+    }
+  
+    function searchHistoryOptions() {
+      return Array.from(searchHistory.options).map(opt => opt.value);
+    }
+  
+    // --- When history item is selected ---
+    searchHistory.addEventListener("change", function () {
+      if (this.value) {
+        searchInput.value = this.value;
+        searchInput.dispatchEvent(new Event("input"));
+      }
+    });
+  
+    // Load history on page load
+    loadSearchHistory();
+  </script>
+  
+  
+</body>
+</html>
