@@ -22,10 +22,6 @@
           <option value="asc">Price: Low to High</option>
           <option value="desc">Price: High to Low</option>
         </select>
-      
-        <select id="searchHistory">
-          <option value="">Search History</option>
-        </select>
       </div>
 
   <section class="account-list">
@@ -60,39 +56,13 @@
   </footer>
   <script>
     const searchInput = document.getElementById("searchInput");
-  
-    searchInput.addEventListener("input", function () {
-      const query = this.value.toLowerCase();
-      const cards = document.querySelectorAll(".account-card");
-  
-      cards.forEach(card => {
-        const text = card.innerText.toLowerCase();
-        if (text.includes(query)) {
-          card.style.display = "block";
-        } else {
-          card.style.display = "none";
-        }
-      });
-    });
-    
-  </script>
-
-<script>
-    const searchInput = document.getElementById("searchInput");
     const sortSelect = document.getElementById("sortSelect");
-    const searchHistory = document.getElementById("searchHistory");
-  
     const cardsContainer = document.querySelector(".account-list");
   
     // --- SEARCH FUNCTION ---
     searchInput.addEventListener("input", function () {
       const query = this.value.toLowerCase();
       const cards = document.querySelectorAll(".account-card");
-  
-      // Save to history
-      if (query && !searchHistoryOptions().includes(query)) {
-        addSearchToHistory(query);
-      }
   
       cards.forEach(card => {
         const text = card.innerText.toLowerCase();
@@ -113,43 +83,7 @@
   
       cards.forEach(card => cardsContainer.appendChild(card));
     });
-  
-    // --- SEARCH HISTORY ---
-    function addSearchToHistory(query) {
-      let history = JSON.parse(localStorage.getItem("searchHistory")) || [];
-      history.unshift(query);
-      history = [...new Set(history)].slice(0, 5); // Max 5 items
-      localStorage.setItem("searchHistory", JSON.stringify(history));
-      loadSearchHistory();
-    }
-  
-    function loadSearchHistory() {
-      const history = JSON.parse(localStorage.getItem("searchHistory")) || [];
-      searchHistory.innerHTML = `<option value="">Search History</option>`;
-      history.forEach(item => {
-        const option = document.createElement("option");
-        option.value = item;
-        option.textContent = item;
-        searchHistory.appendChild(option);
-      });
-    }
-  
-    function searchHistoryOptions() {
-      return Array.from(searchHistory.options).map(opt => opt.value);
-    }
-  
-    // --- When history item is selected ---
-    searchHistory.addEventListener("change", function () {
-      if (this.value) {
-        searchInput.value = this.value;
-        searchInput.dispatchEvent(new Event("input"));
-      }
-    });
-  
-    // Load history on page load
-    loadSearchHistory();
   </script>
-  
-  
+
 </body>
 </html>
