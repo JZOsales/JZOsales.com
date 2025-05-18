@@ -16,13 +16,7 @@
         <input type="text" id="searchInput" placeholder="Search accounts...">
       </div>
 
-      <div class="controls">
-        <select id="sortSelect">
-          <option value="">Sort by Price</option>
-          <option value="asc">Price: Low to High</option>
-          <option value="desc">Price: High to Low</option>
-        </select>
-      </div>
+      
 
   <section class="account-list">
     <div class="account-card">
@@ -56,34 +50,21 @@
   </footer>
   <script>
     const searchInput = document.getElementById("searchInput");
-    const sortSelect = document.getElementById("sortSelect");
-    const cardsContainer = document.querySelector(".account-list");
   
-    // --- SEARCH FUNCTION ---
     searchInput.addEventListener("input", function () {
       const query = this.value.toLowerCase();
       const cards = document.querySelectorAll(".account-card");
   
       cards.forEach(card => {
         const text = card.innerText.toLowerCase();
-        card.style.display = text.includes(query) ? "block" : "none";
+        if (text.includes(query)) {
+          card.style.display = "block";
+        } else {
+          card.style.display = "none";
+        }
       });
-    });
-  
-    // --- SORTING FUNCTION ---
-    sortSelect.addEventListener("change", function () {
-      const cards = Array.from(document.querySelectorAll(".account-card"));
-  
-      cards.sort((a, b) => {
-        const priceA = parseFloat(a.querySelector(".price").innerText.replace("$", ""));
-        const priceB = parseFloat(b.querySelector(".price").innerText.replace("$", ""));
-  
-        return this.value === "asc" ? priceA - priceB : priceB - priceA;
-      });
-  
-      cards.forEach(card => cardsContainer.appendChild(card));
     });
   </script>
-
+  
 </body>
 </html>
